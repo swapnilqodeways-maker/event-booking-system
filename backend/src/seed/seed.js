@@ -18,8 +18,8 @@ const seed = async () => {
   console.log("Cleared existing data");
 
   const users = [
-    { name: "Alice Johnson", email: "alice@example.com", password: await bcrypt.hash("password123", 10) },
-    { name: "Bob Smith", email: "bob@example.com", password: await bcrypt.hash("password456", 10) },
+    { name: "Swapnil Patil", email: "swapnil@gmail.com", password: await bcrypt.hash("password123", 10) },
+    { name: "Vishal Sharma", email: "vishal@gmail.com", password: await bcrypt.hash("password456", 10) },
   ];
 
   await User.insertMany(users);
@@ -72,8 +72,8 @@ const seed = async () => {
   console.log("Events seeded");
 
   console.log("\nSeed complete.");
-  console.log("  alice@example.com / password123");
-  console.log("  bob@example.com   / password456");
+  console.log("  swapnil@gmail.com / password123");
+  console.log("  vishal@gmail.com  / password456");
 
   await mongoose.disconnect();
   process.exit(0);

@@ -13,7 +13,7 @@ const App = () => {
     <BrowserRouter>
       <AuthProvider>
         <Navbar />
-        <main>
+        <main className="bg-slate-50 min-h-[calc(100vh-64px)]">
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<EventListPage />} />

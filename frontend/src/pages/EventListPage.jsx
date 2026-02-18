@@ -17,9 +17,9 @@ const EventListPage = () => {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
+    <div className="page">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Upcoming Events</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Upcoming Events</h1>
         <p className="text-gray-500 text-sm mt-1">Browse and book your next experience</p>
       </div>
 
@@ -32,9 +32,9 @@ const EventListPage = () => {
       )}
 
       {!loading && !error && events.length === 0 && (
-        <div className="text-center py-20 text-gray-400">
-          <p className="text-4xl mb-3">📭</p>
-          <p className="font-medium">No events available at the moment.</p>
+        <div className="card p-10 text-center text-gray-500">
+          <p className="font-semibold text-gray-700">No events available</p>
+          <p className="text-sm mt-1">Please check back later.</p>
         </div>
       )}
 

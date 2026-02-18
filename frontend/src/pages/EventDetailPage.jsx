@@ -53,24 +53,24 @@ const EventDetailPage = () => {
   const bookedPercent = Math.round((event.bookedSeats / event.totalSeats) * 100);
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-10">
+    <div className="page-narrow">
       <button
         onClick={() => navigate("/")}
-        className="text-sm text-indigo-600 hover:text-indigo-800 font-semibold mb-6 flex items-center gap-1 transition-colors"
+        className="btn-link text-sm mb-6 flex items-center gap-1"
       >
-        ← Back to Events
+        Back to Events
       </button>
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="card overflow-hidden">
         <div className="px-6 py-6 border-b border-gray-100">
           <div className="flex items-start justify-between gap-3">
-            <h1 className="text-xl font-bold text-gray-900">{event.name}</h1>
+            <h1 className="text-xl font-semibold text-gray-900">{event.name}</h1>
             {isSoldOut ? (
-              <span className="shrink-0 text-xs bg-red-50 text-red-500 font-semibold px-2.5 py-1 rounded border border-red-100">
+              <span className="chip shrink-0 bg-red-50 text-red-600 border-red-100">
                 Sold Out
               </span>
             ) : (
-              <span className="shrink-0 text-xs bg-green-50 text-green-600 font-semibold px-2.5 py-1 rounded border border-green-100">
+              <span className="chip shrink-0 bg-green-50 text-green-600 border-green-100">
                 Available
               </span>
             )}
@@ -78,7 +78,7 @@ const EventDetailPage = () => {
           <p className="text-sm text-gray-500 mt-2 leading-relaxed">{event.description}</p>
         </div>
 
-        <div className="px-6 py-5 grid grid-cols-2 gap-4 border-b border-gray-100">
+        <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-gray-100">
           <div>
             <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide mb-1">Date</p>
             <p className="text-sm font-semibold text-gray-800">
@@ -100,7 +100,7 @@ const EventDetailPage = () => {
           <div className="flex justify-between items-center mb-2">
             <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Seat Availability</p>
             <p className="text-sm text-gray-600">
-              <span className={`font-bold ${isSoldOut ? "text-red-500" : "text-indigo-600"}`}>
+              <span className={`font-semibold ${isSoldOut ? "text-red-600" : "text-indigo-600"}`}>
                 {event.availableSeats}
               </span>
               {" "}/ {event.totalSeats} remaining
@@ -119,7 +119,7 @@ const EventDetailPage = () => {
           <p className="text-sm font-semibold text-gray-800 mb-4">Book Seats</p>
           <div className="flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-600">Number of seats:</label>
+              <label className="text-sm text-gray-600">Number of seats</label>
               <input
                 type="number"
                 min={1}
@@ -127,13 +127,13 @@ const EventDetailPage = () => {
                 value={seats}
                 onChange={(e) => setSeats(Math.max(1, Number(e.target.value)))}
                 disabled={isSoldOut}
-                className="w-20 border border-gray-300 rounded-lg px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-24 border border-gray-300 rounded-lg px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
             <button
               onClick={handleBook}
               disabled={isSoldOut || booking || seats < 1}
-              className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg text-sm font-semibold transition-colors"
+              className="btn-primary"
             >
               {booking ? "Booking..." : "Book Now"}
             </button>
@@ -142,7 +142,7 @@ const EventDetailPage = () => {
           {!token && !isSoldOut && (
             <p className="text-xs text-gray-500 mt-3">
               Please{" "}
-              <button onClick={() => navigate("/login")} className="text-indigo-600 font-semibold underline">
+              <button onClick={() => navigate("/login")} className="btn-link underline">
                 log in
               </button>{" "}
               to book seats.

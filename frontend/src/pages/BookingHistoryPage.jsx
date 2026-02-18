@@ -47,11 +47,11 @@ const BookingHistoryPage = () => {
           <p className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-5">
             {bookings.length} booking{bookings.length !== 1 ? "s" : ""}
           </p>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {bookings.map((booking) => (
               <div
                 key={booking._id}
-                className="card card-tight flex items-center justify-between gap-4"
+                className="card py-5 flex items-center justify-between gap-6"
               >
                 <div className="flex-1 min-w-0">
                   <h3 className="text-sm font-semibold text-gray-900 truncate">

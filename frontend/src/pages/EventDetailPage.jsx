@@ -59,8 +59,8 @@ const EventDetailPage = () => {
         Back to Events
       </button>
 
-      <div className="surface overflow-hidden">
-        <div className="px-6 py-5 border-b border-gray-100">
+      <div className="surface p-6">
+        <div className="space-y-4">
           <div className="flex items-start justify-between gap-3">
             <h1 className="text-xl font-semibold text-gray-900">{event.name}</h1>
             {isSoldOut ? (
@@ -73,12 +73,10 @@ const EventDetailPage = () => {
               </span>
             )}
           </div>
-          <p className="text-sm text-gray-500 mt-2 leading-relaxed">
-            {event.description}
-          </p>
+          <p className="text-sm text-gray-500 leading-relaxed">{event.description}</p>
         </div>
 
-        <div className="px-6 py-4 grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-gray-100">
+        <div className="pt-5 mt-5 border-t border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide mb-1">Date</p>
             <p className="text-sm font-semibold text-gray-800">
@@ -96,22 +94,20 @@ const EventDetailPage = () => {
           </div>
         </div>
 
-        <div className="px-6 py-4 border-b border-gray-100">
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Seats</p>
-            <p className="text-sm text-gray-600">
-              <span className={`font-semibold ${isSoldOut ? "text-red-600" : "text-indigo-600"}`}>
-                {event.availableSeats}
-              </span>
-              {" "}available
-            </p>
-          </div>
+        <div className="pt-5 mt-5 border-t border-gray-100 flex items-center justify-between">
+          <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Seats</p>
+          <p className="text-sm text-gray-600">
+            <span className={`font-semibold ${isSoldOut ? "text-red-600" : "text-indigo-600"}`}>
+              {event.availableSeats}
+            </span>
+            {" "}available
+          </p>
         </div>
 
-        <div className={`px-6 py-5 ${isSoldOut ? "opacity-50 pointer-events-none" : ""}`}>
+        <div className={`pt-5 mt-5 border-t border-gray-100 ${isSoldOut ? "opacity-50 pointer-events-none" : ""}`}>
           <p className="text-sm font-semibold text-gray-800 mb-4">Book Seats</p>
-          <div className="flex items-center gap-3 flex-wrap">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
               <label className="text-sm text-gray-600">Number of seats</label>
               <input
                 type="number"
@@ -120,7 +116,7 @@ const EventDetailPage = () => {
                 value={seats}
                 onChange={(e) => setSeats(Math.max(1, Number(e.target.value)))}
                 disabled={isSoldOut}
-                className="w-24 border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-24 border border-gray-300 rounded-lg px-3 py-3 text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
             <button

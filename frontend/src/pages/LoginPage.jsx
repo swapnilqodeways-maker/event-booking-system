@@ -27,73 +27,95 @@ const LoginPage = () => {
     }
   };
 
+  const fillCredentials = (e, prefillEmail, prefillPassword) => {
+    e.preventDefault();
+    setEmail(prefillEmail);
+    setPassword(prefillPassword);
+  };
+
   return (
-    <div className="min-h-screen flex">
-      <div className="hidden lg:flex flex-1 bg-indigo-700 flex-col justify-between p-12">
-        <Link to="/" className="text-2xl font-extrabold text-white">
-          Event<span className="text-indigo-200">Book</span>
-        </Link>
-        <div>
-          <h2 className="text-4xl font-bold text-white leading-tight mb-4">
-            Discover and book<br />amazing events
-          </h2>
-          <p className="text-indigo-200 text-lg">
-            From tech summits to music festivals — find your next experience.
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+      <div className="w-full max-w-md">
+
+        <div className="text-center mb-8">
+          <Link to="/" className="text-3xl font-extrabold text-indigo-600">
+            EventBook
+          </Link>
+          <p className="text-gray-500 text-sm mt-2">Sign in to your account</p>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Email address
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="you@example.com"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading || !email || !password}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-2.5 rounded-lg text-sm font-semibold transition-colors"
+            >
+              {loading ? "Signing in..." : "Sign in"}
+            </button>
+          </form>
+        </div>
+
+        <div className="mt-5 bg-white rounded-xl border border-gray-200 p-4">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+            Demo credentials
           </p>
-        </div>
-        <p className="text-indigo-300 text-sm">© 2026 EventBook</p>
-      </div>
-
-      <div className="flex-1 flex items-center justify-center px-6 bg-slate-50">
-        <div className="w-full max-w-sm">
-          <div className="mb-8">
-            <Link to="/" className="text-2xl font-extrabold text-indigo-700 lg:hidden">
-              Event<span className="text-indigo-400">Book</span>
-            </Link>
-            <h1 className="text-2xl font-bold text-gray-900 mt-4">Welcome back</h1>
-            <p className="text-gray-500 text-sm mt-1">Sign in to continue to your account</p>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-8">
-            <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <button
+              onClick={(e) => fillCredentials(e, "alice@example.com", "password123")}
+              className="w-full text-left flex items-center justify-between px-3 py-2.5 rounded-lg border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50 transition group"
+            >
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email address
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="you@example.com"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                />
+                <p className="text-sm font-semibold text-gray-800">Alice Johnson</p>
+                <p className="text-xs text-gray-400 mt-0.5">alice@example.com · password123</p>
               </div>
-
+              <span className="text-xs text-indigo-500 font-semibold opacity-0 group-hover:opacity-100 transition">
+                Use →
+              </span>
+            </button>
+            <button
+              onClick={(e) => fillCredentials(e, "bob@example.com", "password456")}
+              className="w-full text-left flex items-center justify-between px-3 py-2.5 rounded-lg border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50 transition group"
+            >
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="••••••••"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                />
+                <p className="text-sm font-semibold text-gray-800">Bob Smith</p>
+                <p className="text-xs text-gray-400 mt-0.5">bob@example.com · password456</p>
               </div>
-
-              <button
-                type="submit"
-                disabled={loading || !email || !password}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl text-sm font-bold tracking-wide transition-colors shadow-sm mt-2"
-              >
-                {loading ? "Signing in..." : "Sign in"}
-              </button>
-            </form>
+              <span className="text-xs text-indigo-500 font-semibold opacity-0 group-hover:opacity-100 transition">
+                Use →
+              </span>
+            </button>
           </div>
         </div>
+
       </div>
 
       {error && <Toast message={error} type="error" onClose={() => setError("")} />}

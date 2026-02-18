@@ -1,107 +1,145 @@
-# Interview Knowledge — Event Booking System
+# Project Knowledge — Event Booking System
+
+Read this fully before the interview. This document explains everything about how this project works so you can talk about it confidently.
 
 ---
 
-## 1. Give me a quick overview of this project.
+## What is this project?
 
-This is a full-stack Event Booking System where users can browse events, log in, and book seats.
+This is a full-stack web application where users can:
 
-- **Frontend** — React + Vite app, Tailwind CSS for styling, React Router for navigation
-- **Backend** — Node.js + Express REST API, MongoDB Atlas as the database
-- **Auth** — JWT-based login, bcrypt for password hashing
+- Browse a list of upcoming events
+- Log in to their account
+- Book seats for any event
+- View their booking history
 
-Users can see all upcoming events, click on one to view details, book seats, and see their booking history.
+It is built with **React** on the frontend, **Node.js + Express** on the backend, and **MongoDB** as the database.
 
 ---
 
-## 2. What is the folder structure?
+## How the two parts connect
 
-```
-EB/
-├── frontend/          React app (port 5174)
-│   └── src/
-│       ├── api/       Axios instance
-│       ├── components/ Navbar, EventCard, Spinner, Toast
-│       ├── context/   AuthContext (global auth state)
-│       └── pages/     Login, EventList, EventDetail, BookingHistory
-│
-└── backend/           Express API (port 5001)
-    └── src/
-        ├── models/    User, Event, Booking (Mongoose schemas)
-        ├── controllers/ auth, events, bookings logic
-        ├── middleware/ auth check, error handler
-        ├── routes/    API route definitions
-        └── seed/      Script to populate initial data
+The project has two completely separate applications:
+
+```text
+Frontend (React)  →  talks to  →  Backend (Express API)  →  talks to  →  MongoDB
+Port 5174                          Port 5001
 ```
 
----
-
-## 3. How does login and authentication work?
-
-**Step by step:**
-
-1. User enters email and password → frontend sends `POST /api/auth/login`
-2. Backend finds the user in MongoDB by email
-3. Runs `bcrypt.compare(enteredPassword, storedHashedPassword)`
-4. If match → signs a JWT: `jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' })`
-5. Returns the token to the frontend
-6. Frontend stores token in `localStorage` and saves user info in `AuthContext`
-7. Every future request attaches the token: `Authorization: Bearer <token>`
-8. Backend middleware (`authMiddleware`) verifies the token on protected routes using `jwt.verify()`
+The frontend never touches the database directly. It only sends HTTP requests to the backend. The backend talks to MongoDB and sends the response back. This separation is called a **client-server architecture**.
 
 ---
 
-## 4. What is JWT and why use it instead of sessions?
+## Complete Flow — What happens when a user uses the app
 
-**JWT (JSON Web Token)** is a self-contained token that carries user information encoded inside it.
+### Step 1 — User opens the app
 
-- **Sessions** store user data on the server — requires memory or a database lookup on every request
-- **JWT** is stateless — the server just verifies the signature, no DB lookup needed
-- Scales easily because any server instance can verify the token without shared state
-- Suitable for this project since we don't need to revoke tokens in real-time
+The React app loads in the browser. It immediately calls `GET /api/events` to fetch all events from the backend. The backend reads them from MongoDB and returns them. The frontend displays them as cards on the screen.
 
----
-
-## 5. Why hash passwords with bcrypt?
-
-You never store plain-text passwords. If the database leaks, passwords are safe.
-
-- `bcrypt.hash("password123", 10)` — the `10` is the salt rounds (cost factor)
-- Higher cost = slower hashing = harder to brute-force
-- `bcrypt.compare()` hashes the entered password the same way and compares — never decrypts
+No login is required to see events.
 
 ---
 
-## 6. How does the booking work? How do you prevent overbooking?
+### Step 2 — User logs in
 
-This is the key logic:
+User clicks a demo credential → email and password fill automatically → clicks Sign In.
 
-1. User requests N seats → `POST /api/bookings` with `{ eventId, seats }`
-2. Backend checks: `event.totalSeats - event.bookedSeats >= requestedSeats`
-3. If not enough seats → returns 400 error
-4. If seats available → creates the Booking document, then does:
+**What happens behind the scenes:**
 
-```js
-Event.findByIdAndUpdate(eventId, { $inc: { bookedSeats: seats } })
-```
+1. Frontend sends `POST /api/auth/login` with `{ email, password }` to the backend
+2. Backend searches MongoDB for a user with that email
+3. Backend runs `bcrypt.compare(passwordEntered, passwordStoredInDB)`
+   - The password in the database is **never stored as plain text** — it is stored as a hash (an encrypted version)
+   - bcrypt hashes the entered password the same way and checks if they match
+4. If they match → backend creates a **JWT token** and sends it back
+5. Frontend saves this token in `localStorage` (browser storage)
+6. The user's name appears in the Navbar — they are now logged in
 
-**Why `$inc`?** It is a MongoDB atomic operation. Even if two users book at the exact same moment, MongoDB processes `$inc` one at a time — so seats can never go negative. This prevents the race condition that a simple read-then-write would have.
-
----
-
-## 7. Why is `availableSeats` not stored in the database?
-
-Only `totalSeats` and `bookedSeats` are stored. `availableSeats` is computed:
-
-```js
-availableSeats = totalSeats - bookedSeats
-```
-
-This keeps a **single source of truth**. If we stored `availableSeats` separately, we'd have to update two fields on every booking, and they could get out of sync. Deriving it avoids that problem entirely.
+From this point, every API request the frontend makes will carry this token in the request header.
 
 ---
 
-## 8. What is the Axios interceptor doing?
+### Step 3 — How JWT works (important to understand)
+
+JWT stands for **JSON Web Token**. Think of it like a **digital ID card**.
+
+When you log into a government office and get an ID card:
+
+- You show that ID card whenever you need to access something
+- The security guard just checks the ID card — they don't call the government office every time
+- The ID card has an expiry date
+
+JWT works the same way:
+
+- After login, the backend creates a token: `jwt.sign({ userId: "abc123" }, SECRET_KEY, { expiresIn: "7d" })`
+- This token is a long string like: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+- It has 3 parts separated by dots: **Header . Payload . Signature**
+  - **Header** — says what algorithm was used
+  - **Payload** — contains the data (userId in our case)
+  - **Signature** — a secret stamp that proves it was not tampered with
+- Frontend stores this token and sends it with every request: `Authorization: Bearer <token>`
+- Backend receives it, runs `jwt.verify(token, SECRET_KEY)` — if valid, it knows who the user is
+- No database lookup needed to check who is logged in — the token itself carries that information
+
+This is why JWT is better than traditional sessions:
+
+- **Sessions** store user data on the server — every request needs a DB lookup
+- **JWT** is stateless — the server just checks the signature, nothing stored on server side
+
+---
+
+### Step 4 — User clicks on an event
+
+Frontend calls `GET /api/events/:id` with the event's ID. Backend fetches that specific event and returns it with `availableSeats` computed as `totalSeats - bookedSeats`.
+
+The detail page shows the event info, a seat availability bar, and a booking form.
+
+---
+
+### Step 5 — User books seats (the critical part)
+
+User enters number of seats → clicks Book.
+
+**What happens:**
+
+1. Frontend sends `POST /api/bookings` with `{ eventId, seats: 2 }`
+2. The request carries the JWT token — backend's `authMiddleware` verifies it and extracts `userId`
+3. Backend checks: `event.totalSeats - event.bookedSeats >= requestedSeats`
+   - If not enough seats → returns an error → frontend shows a toast notification
+4. If seats are available → backend does two things:
+   - Creates a new Booking document in MongoDB: `{ user: userId, event: eventId, seats: 2 }`
+   - Updates the event's booked count: `Event.findByIdAndUpdate(id, { $inc: { bookedSeats: 2 } })`
+5. Frontend shows a success message
+
+**Why `$inc` and not a regular update?**
+
+`$inc` is a MongoDB atomic operation. Imagine two users booking the last 2 seats at the exact same millisecond. With a regular update (read the value, add to it, write back), both might read `0 booked seats` and both succeed — creating overbooking. With `$inc`, MongoDB handles the addition internally in one locked step, so this race condition cannot happen.
+
+---
+
+### Step 6 — User views their bookings
+
+Frontend calls `GET /api/bookings/my` with the JWT token. Backend extracts `userId` from the token, finds all bookings where `user === userId`, and uses `.populate('event')` to also return the full event details (name, date, location) alongside each booking.
+
+`.populate()` in Mongoose works like a SQL JOIN — the booking only stores the event's ID, but populate replaces that ID with the full event object automatically.
+
+---
+
+## How the frontend manages auth state (React Context)
+
+When the user logs in, the token and user info are stored in `AuthContext` — a global React state available to every component.
+
+- **Navbar** reads from AuthContext → shows username and Logout button if logged in
+- **ProtectedRoute** reads from AuthContext → if no token, redirects to `/login`
+- **Logout** clears the token from AuthContext and localStorage
+
+Without Context, you'd pass user data as props through every component. Context gives one shared place that every component can read from directly.
+
+---
+
+## How the Axios interceptor works
+
+Instead of writing `headers: { Authorization: token }` in every API call, we configure it once:
 
 ```js
 api.interceptors.request.use((config) => {
@@ -111,107 +149,67 @@ api.interceptors.request.use((config) => {
 });
 ```
 
-Instead of manually attaching the token in every API call, the interceptor runs automatically before every request. One place to manage auth headers for the entire app.
+Every request made through our `api` instance automatically gets the token attached. One place, zero repetition.
 
 ---
 
-## 9. What is React Context and why use it here?
+## Database Models
 
-`AuthContext` holds the logged-in user state globally so any component can access it — the Navbar shows the username, protected routes check if a user exists, the logout button clears it.
+**User** — stores who can log in
 
-Without Context, you'd have to pass user data as props through every component (prop drilling). Context solves this cleanly for app-wide state like auth.
-
----
-
-## 10. How does the protected route work?
-
-```jsx
-const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
-  if (!token) return <Navigate to="/login" />;
-  return children;
-};
+```text
+name, email (must be unique), password (bcrypt hashed), timestamps
 ```
 
-If a user tries to visit `/bookings` without being logged in, they are immediately redirected to `/login`.
+**Event** — stores event information
+
+```text
+name, description, date, location, totalSeats, bookedSeats (starts at 0), timestamps
+```
+
+**Booking** — records who booked what
+
+```text
+user → points to a User, event → points to an Event, seats (number), timestamps
+```
+
+Note: `availableSeats` is NOT stored. It is always calculated as `totalSeats - bookedSeats` when needed. Storing it separately would mean two fields to update on every booking — they could get out of sync. One calculation is always accurate.
 
 ---
 
-## 11. What are the API endpoints?
+## API Endpoints at a glance
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/auth/login` | No | Login, returns JWT |
-| GET | `/api/events` | No | List all events |
-| GET | `/api/events/:id` | No | Single event details |
-| POST | `/api/bookings` | Yes | Book seats for an event |
-| GET | `/api/bookings/my` | Yes | Current user's bookings |
-
----
-
-## 12. What are the database models?
-
-**User**
-```
-name, email (unique), password (hashed), timestamps
-```
-
-**Event**
-```
-name, description, date, location, totalSeats, bookedSeats (default 0), timestamps
-```
-
-**Booking**
-```
-user (reference to User), event (reference to Event), seats, timestamps
-```
-
-The Booking model uses references (foreign keys). When fetching bookings, Mongoose's `.populate('event')` joins the event data automatically.
+| Method | URL | Login required | What it does |
+| ------ | --- | -------------- | ------------ |
+| POST | `/api/auth/login` | No | Verifies credentials, returns JWT |
+| GET | `/api/events` | No | Returns all events |
+| GET | `/api/events/:id` | No | Returns one event |
+| POST | `/api/bookings` | Yes | Creates a booking |
+| GET | `/api/bookings/my` | Yes | Returns current user's bookings |
 
 ---
 
-## 13. What is `.populate()` in Mongoose?
+## Tech decisions worth knowing
 
-When a Booking is stored, it only saves the event's `_id` as a reference. When fetching a user's bookings, we call:
+**Why MongoDB?**
+Schema-flexible, easy to scale, great with Node.js via Mongoose. Events and bookings have varying data that fits a document model well.
 
-```js
-Booking.find({ user: userId }).populate('event')
-```
+**Why Express?**
+Minimal and un-opinionated. You wire exactly what you need — routes, middleware, error handling. No magic.
 
-Mongoose replaces the `event` field (which was just an ID) with the full event document. Similar to a SQL JOIN.
+**Why React + Vite?**
+Vite is much faster than Create React App. It serves files using native ES Modules in the browser — no bundling step during development, so hot reload is instant.
 
----
-
-## 14. What is the seed script?
-
-A one-time script (`npm run seed`) that:
-1. Clears all existing Users, Events, and Bookings from the database
-2. Inserts 2 demo users with hashed passwords
-3. Inserts 5 events with Indian locations
-
-Used to set up a fresh, consistent state for development or demo purposes.
+**Why Tailwind CSS?**
+Write styles directly in JSX using utility classes. No context switching between CSS files and components. Tailwind v4 uses a Vite plugin — no config file needed.
 
 ---
 
-## 15. Why Vite instead of Create React App?
+## What I would add with more time
 
-Vite is significantly faster — it uses native ES Modules in the browser during development so there is no bundling step. Hot reload is near-instant. Create React App is slower and largely outdated.
-
----
-
-## 16. How does Tailwind CSS work here?
-
-Tailwind v4 is used with the `@tailwindcss/vite` plugin. Instead of writing custom CSS classes, you compose utility classes directly in JSX (`text-sm`, `font-semibold`, `px-4`, etc.).
-
-Reusable component classes like `.card`, `.btn-primary`, `.chip` are defined once using `@layer components` in `index.css` and used throughout the app.
-
----
-
-## 17. What would you improve if given more time?
-
-- **Cancel booking** — let users cancel a booking (decrement `bookedSeats` back)
-- **Admin panel** — create/edit/delete events
-- **Pagination** — for large numbers of events
-- **Refresh token** — currently JWT expires in 7 days with no refresh mechanism
-- **Email confirmation** — send booking confirmation email
-- **Input validation** — use a library like Zod or Joi on the backend for stronger validation
+- **Cancel booking** — decrement `bookedSeats` when user cancels
+- **Admin panel** — create and manage events
+- **Register page** — currently users are only added through the seed script
+- **Email confirmation** — send a booking receipt via email
+- **Pagination** — load events in pages instead of all at once
+- **Input validation** — Zod or Joi on the backend for stricter request validation

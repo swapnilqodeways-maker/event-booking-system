@@ -1,15 +1,15 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import User from "../models/User";
-import Event from "../models/Event";
-import Booking from "../models/Booking";
+import User from "../models/User.js";
+import Event from "../models/Event.js";
+import Booking from "../models/Booking.js";
 
 dotenv.config({ path: "../../.env" });
 dotenv.config();
 
-const seed = async (): Promise<void> => {
-  await mongoose.connect(process.env.MONGO_URI as string);
+const seed = async () => {
+  await mongoose.connect(process.env.MONGO_URI);
   console.log("Connected to MongoDB");
 
   await User.deleteMany({});
@@ -18,16 +18,8 @@ const seed = async (): Promise<void> => {
   console.log("Cleared existing data");
 
   const users = [
-    {
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      password: await bcrypt.hash("password123", 10),
-    },
-    {
-      name: "Bob Smith",
-      email: "bob@example.com",
-      password: await bcrypt.hash("password456", 10),
-    },
+    { name: "Alice Johnson", email: "alice@example.com", password: await bcrypt.hash("password123", 10) },
+    { name: "Bob Smith", email: "bob@example.com", password: await bcrypt.hash("password456", 10) },
   ];
 
   await User.insertMany(users);
@@ -80,7 +72,6 @@ const seed = async (): Promise<void> => {
   console.log("Events seeded");
 
   console.log("\nSeed complete.");
-  console.log("Login credentials:");
   console.log("  alice@example.com / password123");
   console.log("  bob@example.com   / password456");
 

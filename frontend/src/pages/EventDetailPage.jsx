@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import type { Event } from "../types";
 import { useAuth } from "../context/AuthContext";
 import Spinner from "../components/Spinner";
 import Toast from "../components/Toast";
 
 const EventDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const navigate = useNavigate();
   const { token } = useAuth();
 
-  const [event, setEvent] = useState<Event | null>(null);
+  const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [seats, setSeats] = useState(1);
   const [booking, setBooking] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     api
@@ -34,16 +33,15 @@ const EventDetailPage = () => {
     setBooking(true);
     try {
       await api.post("/bookings", { eventId: id, seats });
-      setEvent((prev) =>
-        prev ? { ...prev, bookedSeats: prev.bookedSeats + seats, availableSeats: prev.availableSeats - seats } : prev
-      );
+      setEvent((prev) => ({
+        ...prev,
+        bookedSeats: prev.bookedSeats + seats,
+        availableSeats: prev.availableSeats - seats,
+      }));
       setToast({ message: `Successfully booked ${seats} seat(s)!`, type: "success" });
       setSeats(1);
-    } catch (err: unknown) {
-      const message =
-        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
-        "Booking failed. Please try again.";
-      setToast({ message, type: "error" });
+    } catch (err) {
+      setToast({ message: err.response?.data?.message || "Booking failed.", type: "error" });
     } finally {
       setBooking(false);
     }
@@ -87,17 +85,14 @@ const EventDetailPage = () => {
               })}
             </p>
           </div>
-
           <div className="bg-gray-50 rounded-lg p-4">
             <p className="text-xs text-gray-500 uppercase font-semibold mb-1">Location</p>
             <p className="text-sm font-medium text-gray-800">{event.location}</p>
           </div>
-
           <div className="bg-gray-50 rounded-lg p-4">
             <p className="text-xs text-gray-500 uppercase font-semibold mb-1">Total Seats</p>
             <p className="text-sm font-medium text-gray-800">{event.totalSeats}</p>
           </div>
-
           <div className="bg-gray-50 rounded-lg p-4">
             <p className="text-xs text-gray-500 uppercase font-semibold mb-1">Available</p>
             <p className={`text-sm font-semibold ${isSoldOut ? "text-red-600" : "text-green-600"}`}>
@@ -144,9 +139,7 @@ const EventDetailPage = () => {
         </div>
       </div>
 
-      {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
-      )}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
 };

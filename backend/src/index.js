@@ -2,19 +2,19 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
-import connectDB from "./config/db";
-import authRoutes from "./routes/authRoutes";
-import eventRoutes from "./routes/eventRoutes";
-import bookingRoutes from "./routes/bookingRoutes";
-import errorMiddleware from "./middleware/errorMiddleware";
+import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
+import eventRoutes from "./routes/eventRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
+import errorMiddleware from "./middleware/errorMiddleware.js";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 app.use(helmet());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: "http://localhost:5174", credentials: true }));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);

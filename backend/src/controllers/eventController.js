@@ -1,7 +1,6 @@
-import { Request, Response } from "express";
-import Event from "../models/Event";
+import Event from "../models/Event.js";
 
-export const getEvents = async (req: Request, res: Response): Promise<void> => {
+export const getEvents = async (req, res) => {
   const events = await Event.find().sort({ date: 1 });
 
   const data = events.map((e) => ({
@@ -17,12 +16,11 @@ export const getEvents = async (req: Request, res: Response): Promise<void> => {
   res.json(data);
 };
 
-export const getEventById = async (req: Request, res: Response): Promise<void> => {
+export const getEventById = async (req, res) => {
   const event = await Event.findById(req.params.id);
 
   if (!event) {
-    res.status(404).json({ message: "Event not found" });
-    return;
+    return res.status(404).json({ message: "Event not found" });
   }
 
   res.json({

@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import type { Event } from "../types";
 import EventCard from "../components/EventCard";
 import Spinner from "../components/Spinner";
 
 const EventListPage = () => {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 

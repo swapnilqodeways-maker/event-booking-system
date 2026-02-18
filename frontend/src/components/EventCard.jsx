@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import type { Event } from "../types";
 
-const EventCard = ({ event }: { event: Event }) => {
+const EventCard = ({ event }) => {
   const navigate = useNavigate();
   const isSoldOut = event.availableSeats === 0;
 

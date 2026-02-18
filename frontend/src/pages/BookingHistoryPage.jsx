@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import type { Booking } from "../types";
 import Spinner from "../components/Spinner";
 
 const BookingHistoryPage = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -41,10 +40,7 @@ const BookingHistoryPage = () => {
       {!loading && !error && bookings.length > 0 && (
         <div className="space-y-4">
           {bookings.map((booking) => (
-            <div
-              key={booking._id}
-              className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm"
-            >
+            <div key={booking._id} className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="font-semibold text-gray-900">{booking.event.name}</h3>
@@ -72,12 +68,9 @@ const BookingHistoryPage = () => {
                     </p>
                   </div>
                 </div>
-
-                <div className="text-right">
-                  <span className="bg-indigo-50 text-indigo-700 text-sm font-semibold px-3 py-1.5 rounded-lg">
-                    {booking.seats} seat{booking.seats > 1 ? "s" : ""}
-                  </span>
-                </div>
+                <span className="bg-indigo-50 text-indigo-700 text-sm font-semibold px-3 py-1.5 rounded-lg">
+                  {booking.seats} seat{booking.seats > 1 ? "s" : ""}
+                </span>
               </div>
             </div>
           ))}

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import Spinner from "../components/Spinner";
 
 const BookingHistoryPage = () => {
   const [bookings, setBookings] = useState([]);
@@ -23,8 +22,6 @@ const BookingHistoryPage = () => {
         <h1 className="text-2xl font-semibold text-gray-900">My Bookings</h1>
         <p className="text-gray-500 text-sm mt-1">All events you have booked seats for</p>
       </div>
-
-      {loading && <Spinner />}
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg px-4 py-3 text-sm">

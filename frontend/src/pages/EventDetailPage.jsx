@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
-import Spinner from "../components/Spinner";
 import Toast from "../components/Toast";
 
 const EventDetailPage = () => {
@@ -46,8 +45,7 @@ const EventDetailPage = () => {
     }
   };
 
-  if (loading) return <Spinner />;
-  if (!event) return null;
+  if (loading || !event) return null;
 
   const isSoldOut = event.availableSeats === 0;
   return (

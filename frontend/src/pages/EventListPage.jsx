@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import EventCard from "../components/EventCard";
-import Spinner from "../components/Spinner";
 
 const EventListPage = () => {
   const [events, setEvents] = useState([]);
@@ -22,8 +21,6 @@ const EventListPage = () => {
         <h1 className="text-2xl font-semibold text-gray-900">Upcoming Events</h1>
         <p className="text-gray-500 text-sm mt-1">Browse and book your next experience</p>
       </div>
-
-      {loading && <Spinner />}
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg px-4 py-3 text-sm">

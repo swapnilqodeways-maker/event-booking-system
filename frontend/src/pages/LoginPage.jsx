@@ -43,7 +43,7 @@ const LoginPage = () => {
           <p className="text-gray-500 text-sm mt-2">Sign in to your account</p>
         </div>
 
-        <div className="card-padded">
+        <div className="card card-spacious">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
@@ -83,7 +83,7 @@ const LoginPage = () => {
           </form>
         </div>
 
-        <div className="mt-5 card p-4">
+        <div className="mt-5 card card-tight">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
             Demo credentials
           </p>

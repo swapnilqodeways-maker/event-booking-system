@@ -12,7 +12,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white/95 sticky top-0 z-40 border-b border-gray-200 backdrop-blur">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="nav-inner">
         <Link to="/" className="text-lg font-semibold text-gray-900 tracking-tight">
           EventBook
         </Link>

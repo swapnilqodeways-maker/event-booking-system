@@ -33,7 +33,7 @@ const BookingHistoryPage = () => {
       )}
 
       {!loading && !error && bookings.length === 0 && (
-        <div className="card p-8 text-center">
+        <div className="card card-spacious text-center">
           <p className="text-gray-700 font-semibold">No bookings yet</p>
           <p className="text-gray-400 text-sm mt-1 mb-6">Book your first event to see it here.</p>
           <button onClick={() => navigate("/")} className="btn-primary">
@@ -51,7 +51,7 @@ const BookingHistoryPage = () => {
             {bookings.map((booking) => (
               <div
                 key={booking._id}
-                className="card px-5 py-4 flex items-center justify-between gap-4"
+                className="card card-tight flex items-center justify-between gap-4"
               >
                 <div className="flex-1 min-w-0">
                   <h3 className="text-sm font-semibold text-gray-900 truncate">

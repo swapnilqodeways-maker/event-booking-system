@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import { Event } from "../types";
+import type { Event } from "../types";
 import { useAuth } from "../context/AuthContext";
 import Spinner from "../components/Spinner";
 import Toast from "../components/Toast";

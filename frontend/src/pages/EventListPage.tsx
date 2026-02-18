@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import { Event } from "../types";
+import type { Event } from "../types";
 import EventCard from "../components/EventCard";
 import Spinner from "../components/Spinner";
 

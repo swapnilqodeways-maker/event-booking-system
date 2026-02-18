@@ -11,29 +11,40 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
-      <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold text-indigo-600 tracking-tight">
-          EventBook
+    <nav className="bg-indigo-700 sticky top-0 z-40 shadow-lg">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <Link to="/" className="text-2xl font-extrabold text-white tracking-tight">
+          Event<span className="text-indigo-200">Book</span>
         </Link>
 
-        <div className="flex items-center gap-6">
-          <Link to="/" className="text-sm text-gray-600 hover:text-indigo-600 font-medium">
+        <div className="flex items-center gap-8">
+          <Link
+            to="/"
+            className="text-sm text-indigo-100 hover:text-white font-medium transition-colors"
+          >
             Events
           </Link>
 
           {user && (
-            <Link to="/bookings" className="text-sm text-gray-600 hover:text-indigo-600 font-medium">
+            <Link
+              to="/bookings"
+              className="text-sm text-indigo-100 hover:text-white font-medium transition-colors"
+            >
               My Bookings
             </Link>
           )}
 
           {user ? (
             <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-500">Hi, {user.name.split(" ")[0]}</span>
+              <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-sm font-bold">
+                {user.name.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-sm text-indigo-100 font-medium">
+                {user.name.split(" ")[0]}
+              </span>
               <button
                 onClick={handleLogout}
-                className="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors"
+                className="text-sm bg-white/10 hover:bg-white/20 text-white border border-white/20 px-4 py-1.5 rounded-lg font-medium transition-all"
               >
                 Logout
               </button>
@@ -41,7 +52,7 @@ const Navbar = () => {
           ) : (
             <Link
               to="/login"
-              className="text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              className="text-sm bg-white text-indigo-700 hover:bg-indigo-50 px-5 py-2 rounded-lg font-semibold transition-colors shadow-sm"
             >
               Login
             </Link>

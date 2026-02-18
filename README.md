@@ -34,8 +34,8 @@ Create `backend/.env`:
 
 ```env
 PORT=5001
-MONGO_URI=mongodb+srv://swapnilpatil7050_db_user:rjedhkLmWu6FQPEq@cluster0.0xoaycf.mongodb.net/eventbooking?appName=Cluster0
-JWT_SECRET=eventbooking_jwt_secret_2026
+MONGO_URI=your_mongodb_atlas_connection_string
+JWT_SECRET=your_jwt_secret_key
 ```
 
 Seed the database:

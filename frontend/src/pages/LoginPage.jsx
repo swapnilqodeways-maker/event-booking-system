@@ -35,7 +35,7 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-12">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-lg">
         <div className="text-center mb-8">
           <Link to="/" className="text-2xl font-semibold text-gray-900">
             EventBook
@@ -55,7 +55,7 @@ const LoginPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="you@example.com"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                className="input"
               />
             </div>
 
@@ -69,8 +69,9 @@ const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="password"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                className="input"
               />
+              <p className="text-xs text-gray-400 mt-2">Use your account password to continue.</p>
             </div>
 
             <button
@@ -81,6 +82,10 @@ const LoginPage = () => {
               {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
+        </div>
+
+        <div className="mt-6">
+          <div className="h-px bg-gray-200" />
         </div>
 
         <div className="mt-5 card card-tight">
